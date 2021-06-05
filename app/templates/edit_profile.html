@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="col-lg-7 mx-auto">
+        <div class="card my-5" style="box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);color: #1c1c1c;border-radius: 2rem;">
+            <div class="card-body">
+                <h1 style="text-align: center;font-family: 'RocknRoll One', sans-serif;color: #555555;">Edit Profile</h1>
+                <form action="" method="post" class="mx-5 mt-5" style="font-family: 'RocknRoll One', sans-serif;">
+                    {{ form.hidden_tag() }}
+                    <p>
+                        {{ form.username.label(class="username_label") }}<br>
+                        {{ form.username(size=32,class="input_username pl-2") }}<br>
+                        {% for error in form.username.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </p>
+                    <p>
+                        {{ form.about_me.label(class="username_label") }}<br>
+                        {{ form.about_me(cols=50, rows=5 ,class="input_about pl-2") }}<br>
+                        {% for error in form.about_me.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </p>
+                    <p>{{ form.submit(class="singin border-0 px-3 py-1") }}</p>
+                </form>
+             </div>   
+         </div>       
+    </div>            
+{% endblock %}

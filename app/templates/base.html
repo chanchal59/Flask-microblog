@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Flask app</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=RocknRoll+One&display=swap" rel="stylesheet">
+
+
+        <style>
+
+          .input_username , .input_password{
+            border-radius: 1rem;
+            border: 1px solid  #353839; 
+          }
+
+
+          .input_username:focus {
+            padding-left: 1rem;
+            outline: none;
+          }
+
+          .input_password:focus {
+             padding-left: 1rem;
+            outline: none;
+            
+          }
+
+          .username_label , .passwrod_label{
+            color: #353839; 
+            font-size: 13px;
+          }
+
+          .singin{
+            background-color: #353839;
+            color:white;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
+            border-radius:2rem;
+            font-size: 15px;
+          }
+
+          .rem{
+            font-size: 15px;
+            color:#555555;
+          }
+
+          .input_about{
+            border-radius: 1rem;
+            border: 1px solid #353839; 
+            
+          }
+
+           .input_about:focus {
+             padding-left: 1rem;
+            outline: none;
+            
+          }
+          .reg_button{
+            background-color: #353839;
+            color:white;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
+            border-radius:2rem;
+
+          }
+
+          .say_something{
+            color: #353839;
+          }
+
+          .text_area_post{
+            border-radius: 1rem; 
+            box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+          }
+
+          .input_email_reset{
+            border-radius: 1rem;
+            border: 1px solid #353839; 
+          }
+
+          .input_email_reset:focus {
+            padding-left: 1rem;
+            outline: none;
+        }
+
+        .post{
+          font-size: 13px;
+        }
+        </style>
+    </head>
+    <body style="scroll-behavior: smooth;">
+
+         
+              <nav class="navbar navbar-expand-lg" style="background-color:;box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                  <a class="navbar-brand px-5" href="#" style="font-family: 'RocknRoll One', sans-serif;font-size: 2rem;color:#353839;"> Microblog</a>
+                  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" style="color: black;">
+                    <span class="navbar-toggler-icon"></span>
+                  </button>
+
+                  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                      <ul class="navbar-nav ml-auto">
+                          <li class="nav-item mr-3" style="font-family: 'RocknRoll One',sans-serif;">
+                              <a class="btn nav-link px-3 py-1" href="{{ url_for('index') }}" style="background-color: #00ced1;color: white;box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);font-size: 13px;" role="button">Home</a>
+                          </li>
+                          {% if current_user.is_anonymous %}
+                          <li class="nav-item mr-3" style="font-family: 'RocknRoll One',sans-serif;">
+                              <a class="btn nav-link px-3 py-1" href="{{ url_for('login') }}" style="background-color:white;color:#00ced1;box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);font-size: 13px;border:1px solid #00ced1;" role="button">Login</a>
+                          </li>
+                          {% else %}
+                          <li class="nav-item mr-3" style="font-family: 'RocknRoll One',sans-serif;">
+                              <a class="btn nav-link px-3 py-1" href="{{ url_for('user', username=current_user.username) }}" style="background-color:white;color:#00ced1;box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);font-size: 13px;border:1px solid #00ced1;" role="button">Profile</a>
+                          </li>
+                          <li class="nav-item mr-3" style="font-family: 'RocknRoll One',sans-serif;">
+                              <a class="btn nav-link px-3 py-1" href="{{ url_for('logout') }}" style="background-color:white;color:#00ced1;box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);font-size: 13px;border:1px solid #00ced1;" role="button">Logout</a>
+                          </li>
+                          <li class="nav-item mr-3" style="font-family: 'RocknRoll One',sans-serif;">
+                              <a class="btn nav-link px-3 py-1" href="{{ url_for('explore') }}" style="background-color:white;color:#00ced1;box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);font-size: 13px;border:1px solid #00ced1;" role="button">Explore</a>
+                          </li>
+
+                          {% endif %}
+                      </ul>
+                  </div>
+              </nav>
+          </div>
+          {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                  {% for category, message in messages %}
+                      <div class="alert alert-{{ category }} col-lg-6 offset-lg-3 text-center mt-3" style="color: #00ced1;font-family: 'RocknRoll One',sans-serif; ">
+                        {{ message }}
+                      </div>
+                  {% endfor %}
+              {% endif %}
+          {% endwith %}
+
+          <div class="container">
+              {% block content %}{% endblock %}
+          </div>
+
+
+        
+        
+        <script>
+        //   $(document).ready(function () {
+
+        // // like and unlike click
+       
+        //         $(".like, .unlike").click(function () {
+        //             event.preventDefault();
+        //             var id = this.id;   // Getting Button id
+        //             console.log(id)
+
+        //             var split_id = id.split("_");
+        //             console.log(split_id)
+
+        //             var text = split_id[0];
+        //             var album_id1 = split_id[1];  // albumid
+
+
+
+        //             // AJAX Request
+        //             $.ajax({
+        //                 url: '/like',
+        //                 type: 'POST',
+        //                 data: { post_id: album_id1, likeunlike: text },
+        //                 success: function (data) {
+        //                     // var like = data['like'];
+        //                     // var unlike = data['unlike'];
+
+        //                     // $("#like_" + post_id).json(data);        // setting likes
+        //                     // $("#unlike_" + post_id).json(data);    // setting unlikes
+        //                     console.log('hello')
+
+        //                 }
+
+        //             });
+
+        //         });
+
+        //     });
+
+        </script>
+
+    </body>
+</html>

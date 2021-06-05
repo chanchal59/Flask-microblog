@@ -1,0 +1,45 @@
+<!-- {% if current_user.is_authenticated %} -->
+<div style="font-family: 'RocknRoll One',sans-serif;color: #3d3d3d;box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);border-radius: 1rem;color: #353839;">
+    <div class="card my-3">
+        <div class="card-body">
+            <table class="my-2">
+                {% if current_user.is_authenticated %}
+        		<tr>
+            		<td><img src="{{ post.author.avatar(50) }}" style="border-radius: 50%;"></td>
+                    <!-- <td><img src="userimg.jpg" class="ronded-circle accont-img"></td> -->
+            		<td>
+                        <a href="{{ url_for('user', username=post.author.username) }}">{{ post.author.username}}</a>
+                       says:<br><p style="font-size: 13px;">{{ post.body }}<br>
+                       
+                        {% if current_user.has_liked_post(post) %}
+                                <a href="{{ url_for('like_action', post_id=post.id, action='unlike') }}">Unlike</a>
+                                <!-- <a class="like-button unlike" id="unlike_{{ post.id }}" href="#0">Unlike</a> -->
+                                <!-- <a class="like-button unlike" id="unlike_{{ post.id }}" href="http://127.0.0.1:5000/like_me">Unlike</a> -->
+                            {% else %}
+                                <a href="{{ url_for('like_action', post_id=post.id, action='like') }}">Like</a>
+                                <!-- <a class="like-button like" id="like_{{ post.id }}"  href="#0">Like</a> -->
+                            {% endif %}
+                                {{ post.likes.count() }} likes
+                            {% else %}
+                                {{ post.likes.count() }} likes
+                            {% endif %}                   
+                       </p>
+                        
+                       <a class="btn px-3 py-1" href="{{ url_for('comment_post', post_id=post.id)}}" style="background-color:white;color:#00ced1;font-size: 13px;border:1px solid #00ced1;" role="button">Comment</a>
+
+                        <a class="btn px-3 py-1" href="{{ url_for('delete_post', post_id=post.id)}}" style="background-color:white;color:#00ced1;font-size: 13px;border:1px solid #00ced1;" role="button">Delete</a>
+                        <a class="btn px-3 py-1" href="{{ url_for('update_post', post_id=post.id)}}" style="background-color:white;color:#00ced1;font-size: 13px;border:1px solid #00ced1;" role="button">Update</a>
+                    </td>
+        		</tr>
+                {% endif %}
+    		</table>
+           
+        </div>
+    </div>
+</div>
+
+
+<!-- <script src="static/javascript_file/javascript_js.js"></script> -->
+<!-- <script src="{{url_for('static' , filename = 'javascript_file/javascript_js.js')}}"></script> -->
+
+

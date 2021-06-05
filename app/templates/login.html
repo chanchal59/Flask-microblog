@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    <div class="col-lg-5 mx-auto">
+        <div class="card my-3" style=" box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);border-radius: 2rem;">
+            <div class="card-body">
+                <h1 style="text-align: center;font-family: 'RocknRoll One', sans-serif;color: #353839; ">Sign In</h1>
+                <form action="" method="post" novalidate class="mx-5 my-4" style="font-family: 'RocknRoll One', sans-serif;">
+                    {{ form.hidden_tag() }}
+                    <p>
+                        {{ form.username.label(class="username_label") }}<br>
+                        {{ form.username(size=32, class="input_username col-12") }}<br>
+                        {% for error in form.username.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </p>
+                    <p>
+                        {{ form.password.label(class='passwrod_label') }}<br>
+                        {{ form.password(size=32, class="input_password col-12") }}<br>
+                        {% for error in form.password.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </p>
+                    <p>{{ form.remember_me() }} {{ form.remember_me.label(class="rem") }}</p>
+                    <a href="{{ url_for('reset_password_request') }}" style="text-decoration: none;color: #00ced1;font-size: 15px;">Forgot Password?</a>
+                    <p>{{ form.submit(class="singin border-0 px-3 py-1 mt-3") }}</p>
+                    <p style="color:#555555;font-size: 15px; ">New User? <a href="{{ url_for('register') }}" style="color: #00ced1;">Click to Register!</a></p>
+                </form>
+            </div>
+        </div>    
+    </div>    
+{% endblock %}
+
+
