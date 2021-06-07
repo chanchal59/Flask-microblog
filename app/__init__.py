@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, session
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -8,6 +8,8 @@ from logging.handlers import SMTPHandler
 from logging.handlers import RotatingFileHandler
 import os
 from flask_mail import Mail
+
+
 
 app = Flask(__name__)
 app.config.from_object(Config)

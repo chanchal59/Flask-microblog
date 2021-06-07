@@ -27,7 +27,7 @@
                 <p>{{ user.followers.count() }} followers {{ user.followed.count() }} following</p>
                 {% if user == current_user %}
                     <p>
-                        <a class="btn px-3 py-1" href="{{ url_for('edit_profile') }}" style="background-color:white;color:#00ced1;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);font-size: 13px;border:1px solid #00ced1;" role="button">Edit your profile</a>
+                        <a class="btn px-3 py-1" href="{{ url_for('edit_profile') }}" style="background-color:white;color:#00ced1;font-size: 13px;border:1px solid #00ced1;" role="button">Edit your profile</a>
                     </p>
                     {% elif not current_user.is_following(user) %}
                     <p>

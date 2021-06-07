@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, session
+from flask import render_template, flash, redirect, url_for
 from app import app
 from app.forms import LoginForm
 from flask_login import current_user, login_user, login_required
@@ -27,7 +27,6 @@ from app.models import Comment
 
 
 
-
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 @login_required
@@ -39,17 +38,16 @@ def index():
 		db.session.commit()
 		flash(f'Your post is now live!','info')
 		return redirect(url_for('index'))
-	# post = Post.query.filter_by(id=)	
-	
 	page = request.args.get('page', 1, type=int)
 	posts = current_user.followed_posts().paginate(
 		page, app.config['POSTS_PER_PAGE'], False)
+	# for i in posts.items:
+	# 	if Comment.query.filter_by(post_id=i.id):
+	# 		comment_count = Comment.query.filter_by(post_id=i.id).count()
 	next_url = url_for('index', page=posts.next_num) \
 		if posts.has_next else None
 	prev_url = url_for('index', page=posts.prev_num) \
 		if posts.has_prev else None
-	# posts = current_user.followed_posts().paginate(
-		# page, app.config['POSTS_PER_PAGE'], False)
 	return render_template('index.html', title='Home', form=form,
 						   posts=posts.items, next_url=next_url,
 						   prev_url=prev_url)
@@ -274,23 +272,29 @@ def like_action(post_id, action):
 
 
 
-
-
 @app.route("/post/<int:post_id>/comment", methods=["GET", "POST"])
 @login_required
 def comment_post(post_id):
 	post =  Post.query.filter_by(id=post_id).first_or_404()
-	comments = Comment.query.filter_by(post_id=post_id).all()
-	comment_count = Comment.query.filter_by(post_id=post_id).count()
+	comment_to_show = Comment.query.filter_by(post_id=post_id).all()
 	form = AddCommentForm()
 	if form.validate_on_submit():
-		comment = Comment(text=form.body.data, author=current_user.id, post_id=post_id)
-		db.session.add(comment)
-		db.session.commit()
-		flash("Your comment has been added to the post", "success")
-		return redirect(url_for("comment_post", post_id=post.id))
+		if request.method == 'POST':
+			comment = Comment(text=form.body.data, author=current_user.id, post_id=post_id)
+			db.session.add(comment)
+			db.session.commit()
+			if post.comment_count == None:
+				post.comment_count = 1
+			else:
+				post.comment_count += comment_to_show.count()
+			# print(post.comment_count)		
+			# session.query(Post).filter_by(id=post_id).update({'comment_count': Post.comment_count + 1})
+			# session.commit()
+			# post.comment_count
+			flash("Your comment has been added to the post", "success")
+			return redirect(url_for("comment_post", post_id=post.id)) 
 	return render_template("comment_dispaly.html", title="Comment Post", 
-				form=form, post_id=post_id, post=post, comments=comments, comment_count=comment_count)
+				form=form, post_id=post_id, post=post, comment_to_show=comment_to_show, comment_count=post.comment_count)
 
 
 
@@ -298,28 +302,42 @@ def comment_post(post_id):
 @app.route("/post/<int:post_id>")
 @login_required
 def delete_post(post_id):
-	post = Post.query.filter_by(id=post_id).first_or_404()
-	if post.user_id == current_user.id:
-		db.session.delete(post)
-		db.session.commit()
-		flash("Your Post has been deleted", "success")
-		return redirect(url_for('index'))
-		
+	Post_delete = Post.query.filter_by(id=post_id).first_or_404()
+	comments = Comment.query.filter_by(post_id=post_id).all()
+	for i in comments:
+		db.session.delete(i)
+	db.session.delete(Post_delete)
+	db.session.commit()
+	flash("Your Post has been deleted", "success")
+	return redirect(url_for('index'))		
 
-    
 
 
-@app.route("/update/<int:post_id>")
+
+@app.route("/update_post/<int:post_id>")
 @login_required
 def update_post(post_id):
 	post = Post.query.filter_by(id=post_id).first_or_404()
 	form = PostForm()
 	if form.validate_on_submit():
-		post.update({post.body : 'from.post.data'})
+		post.body = form.post.data
 		db.session.commit()
-		return redirect(url_for('index'))
-	return render_template('update_post.html' , post = post)	
+		flash(f'Your changes have been saved.','success')
+		return redirect(url_for('update_post', post_id=post.id))
+	elif request.method == 'GET':
+		form.post.data = post.body
+	return render_template('update_post.html', post = post, form=form)	
 
+
+
+@app.route("/delete_comment/<int:comment_id>")
+@login_required
+def delete_comment(comment_id):
+	comment = Comment.query.filter_by(id=comment_id).first_or_404()
+	db.session.delete(comment)
+	db.session.commit()
+	flash("Your comment has been deleted", "success")
+	return redirect(url_for('comment_post', post_id=comment.post_id))
 
 
 

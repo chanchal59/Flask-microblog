@@ -15,6 +15,8 @@ followers = db.Table('followers',
 	db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
 )  
 
+
+
 class User(UserMixin,db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	username = db.Column(db.String(64), index=True, unique=True)
@@ -109,6 +111,7 @@ class Post(db.Model):
 	timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 	# comment = db.relationship('Comment', backref='author', lazy='dynamic')
+	comment_count =  db.Column(db.Integer)
 
 	def __repr__(self):
 		return '<Post {}>'.format(self.body)
@@ -162,3 +165,11 @@ class PostLike(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 	post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
+
+
+
+# class Comment_count(db.Model):
+# 	__tablename__ = 'Comment_count'
+# 	id = db.Column(db.Integer, primary_key=True)
+# 	post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
+# 	count_of_comment = db.Column(db.Integer)

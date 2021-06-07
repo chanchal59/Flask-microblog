@@ -24,11 +24,19 @@
                                 {{ post.likes.count() }} likes
                             {% endif %}                   
                        </p>
-                        
+                        {% if post.comment_count %}
+                           <p>{{ post.comment_count }}</p>
+                        {% endif %} 
+
                        <a class="btn px-3 py-1" href="{{ url_for('comment_post', post_id=post.id)}}" style="background-color:white;color:#00ced1;font-size: 13px;border:1px solid #00ced1;" role="button">Comment</a>
 
+                        {% if current_user.is_authenticated %}
                         <a class="btn px-3 py-1" href="{{ url_for('delete_post', post_id=post.id)}}" style="background-color:white;color:#00ced1;font-size: 13px;border:1px solid #00ced1;" role="button">Delete</a>
+                         {% endif %} 
+
+                          {% if current_user.is_authenticated %}
                         <a class="btn px-3 py-1" href="{{ url_for('update_post', post_id=post.id)}}" style="background-color:white;color:#00ced1;font-size: 13px;border:1px solid #00ced1;" role="button">Update</a>
+                         {% endif %} 
                     </td>
         		</tr>
                 {% endif %}

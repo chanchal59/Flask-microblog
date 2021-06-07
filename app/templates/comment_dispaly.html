@@ -29,7 +29,7 @@
                                 {{ post.likes.count() }} likes
                             {% endif %} 
                             <br>  
-                            {{ comment_count }} Comments              
+                            {{ post.comment_count }} Comments              
                        </p>
                     </td>
                 </tr>
@@ -59,8 +59,10 @@
             </div>
 
             <div class="mt-5">
-                {% for comment in comments %}
-                    <hr><p><span style="font-size:13px;">Comment: </span>{{ comment.text }}</p><hr>
+                {% for comment in comment_to_show %}
+                    <hr><p><span style="font-size:13px;">{{ comment.author.username }}says: </span>{{ comment.text }}</p>
+                    <a class="btn px-3 py-1" href="{{ url_for('delete_comment', comment_id=comment.id)}}" style="background-color:white;color:#00ced1;font-size: 13px;border:1px solid #00ced1;" role="button">Delete</a>
+                    <hr>
                 {% endfor %}
             </div>
         </div>
