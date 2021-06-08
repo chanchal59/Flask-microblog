@@ -283,14 +283,12 @@ def comment_post(post_id):
 			comment = Comment(text=form.body.data, author=current_user.id, post_id=post_id)
 			db.session.add(comment)
 			db.session.commit()
+			# comment_username = comment.user_id.username
 			if post.comment_count == None:
 				post.comment_count = 1
 			else:
-				post.comment_count += comment_to_show.count()
-			# print(post.comment_count)		
-			# session.query(Post).filter_by(id=post_id).update({'comment_count': Post.comment_count + 1})
-			# session.commit()
-			# post.comment_count
+				post.comment_count += 1
+			db.session.commit()	
 			flash("Your comment has been added to the post", "success")
 			return redirect(url_for("comment_post", post_id=post.id)) 
 	return render_template("comment_dispaly.html", title="Comment Post", 
@@ -314,16 +312,17 @@ def delete_post(post_id):
 
 
 
-@app.route("/update_post/<int:post_id>")
+@app.route("/update_post/<int:post_id>", methods=['GET', 'POST'])
 @login_required
 def update_post(post_id):
 	post = Post.query.filter_by(id=post_id).first_or_404()
 	form = PostForm()
 	if form.validate_on_submit():
-		post.body = form.post.data
-		db.session.commit()
-		flash(f'Your changes have been saved.','success')
-		return redirect(url_for('update_post', post_id=post.id))
+		if request.method == 'POST':
+			post.body = form.post.data
+			db.session.commit()
+			flash(f'Your changes have been saved.','success')
+			return redirect(url_for('update_post', post_id=post.id))
 	elif request.method == 'GET':
 		form.post.data = post.body
 	return render_template('update_post.html', post = post, form=form)	
@@ -334,6 +333,9 @@ def update_post(post_id):
 @login_required
 def delete_comment(comment_id):
 	comment = Comment.query.filter_by(id=comment_id).first_or_404()
+	Q = comment.post_id
+	post = Post.query.filter_by(id=Q).first()
+	post.comment_count -= 1
 	db.session.delete(comment)
 	db.session.commit()
 	flash("Your comment has been deleted", "success")

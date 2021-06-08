@@ -23,6 +23,7 @@ class User(UserMixin,db.Model):
 	email = db.Column(db.String(120), index=True, unique=True)
 	password_hash = db.Column(db.String(128))
 	posts = db.relationship('Post', backref='author', lazy='dynamic')
+	comments = db.relationship('Comment', backref='username_comment', lazy='dynamic')
 	about_me = db.Column(db.String(140))
 	last_seen = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -167,9 +168,3 @@ class PostLike(db.Model):
 	post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
 
 
-
-# class Comment_count(db.Model):
-# 	__tablename__ = 'Comment_count'
-# 	id = db.Column(db.Integer, primary_key=True)
-# 	post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
-# 	count_of_comment = db.Column(db.Integer)
