@@ -1,1 +1,1 @@
-web: flask db migrate; flask db upgrade; flask translate compile; gunicorn microblog:app
+web: export FLASK_APP=microblog.py; flask db init; flask db migrate; flask db upgrade; flask translate compile; gunicorn microblog:app
