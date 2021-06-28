@@ -62,7 +62,11 @@
             <div class="mt-5">
                 {% for comment in comment_to_show %}
                     <hr><p><span style="font-size:13px;">{{ comment.username_comment.username }} says: </span>{{ comment.text }}</p>
+
+                    {% if comment.author == current_user.id %}
                     <a class="btn px-3 py-1" href="{{ url_for('delete_comment', comment_id=comment.id)}}" style="background-color:white;color:#00ced1;font-size: 13px;border:1px solid #00ced1;" role="button">Delete</a>
+                    {% endif %} 
+
                     <hr>
                 {% endfor %}
             </div>
