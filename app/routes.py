@@ -31,9 +31,15 @@ from app.models import Comment
 @app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
+	tags = ['Traditional', 'General', 'Natural', 'Study', 'Sports','Select']
 	form = PostForm()
+	if request.method == 'POST':
+		select_tag = request.form.get('post_tag')
 	if form.validate_on_submit():
-		post = Post(body=form.post.data, author=current_user)
+		if select_tag == 'Select':
+			post = Post(body=form.post.data, author=current_user)
+		else:
+			post = Post(body=form.post.data, author=current_user, post_tag=select_tag)	
 		db.session.add(post)
 		db.session.commit()
 		flash(f'Your post is now live!','info')
@@ -50,7 +56,10 @@ def index():
 		if posts.has_prev else None
 	return render_template('index.html', title='Home', form=form,
 						   posts=posts.items, next_url=next_url,
-						   prev_url=prev_url)
+						   prev_url=prev_url, tags=tags)
+
+
+
 
 
 
@@ -283,7 +292,6 @@ def comment_post(post_id):
 			comment = Comment(text=form.body.data, author=current_user.id, post_id=post_id)
 			db.session.add(comment)
 			db.session.commit()
-			# comment_username = comment.user_id.username
 			if post.comment_count == None:
 				post.comment_count = 1
 			else:
